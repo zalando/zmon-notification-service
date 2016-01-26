@@ -9,13 +9,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "mobile")
 public class MobileAPIConfig {
+
     public String dataServiceUrl;
+
     public String readScope;
 
     public String getDataServiceUrl() {
         return dataServiceUrl;
     }
 
+    /**
+     * The url to the 'zmon-data-service'.
+     * 
+     * @return
+     */
     public void setDataServiceUrl(String dataServiceUrl) {
         this.dataServiceUrl = dataServiceUrl;
     }
