@@ -34,6 +34,7 @@ public class GooglePushNotificationService implements PushNotificationService {
     @Async
     @Override
     public void push(PublishRequestBody notification, String deviceToken) throws IOException {
+        LOG.info("Sending request to google for device={}", deviceToken);
         Response response = Request.Post(serviceUrl).addHeader("Authorization", "Key=" + googleApiKey)
                 .body(jsonEntityFor(deviceToken, notification)).execute();
 

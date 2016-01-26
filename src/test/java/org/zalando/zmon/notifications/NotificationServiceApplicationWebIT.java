@@ -20,7 +20,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -40,8 +39,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.Maps;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { NotificationServiceApplication.class,
-        NotificationServiceApplicationWebIT.TestConfiguration.class })
+@SpringApplicationConfiguration(classes = { NotificationServiceApplication.class })
 @WebIntegrationTest(randomPort = true)
 @ActiveProfiles("it")
 public class NotificationServiceApplicationWebIT implements Resources {
@@ -113,9 +111,5 @@ public class NotificationServiceApplicationWebIT implements Resources {
         Assertions.assertThat(response3.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         TimeUnit.SECONDS.sleep(10);
-    }
-
-    @Configuration
-    static class TestConfiguration {
     }
 }
