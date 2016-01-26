@@ -14,7 +14,7 @@ notifications:
 
   oauth-info-service-url: http://localhost:10080/oauth2/tokeninfo?
 
-  google-push-service-url: https://localhost:10080/gcm/send
+  google-push-service-url: http://localhost:10080/gcm/send
   google-push-service-api-key: INVALID
 
 mobile:

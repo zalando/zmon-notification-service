@@ -96,17 +96,23 @@ public class RedisNotificationStore implements NotificationStore {
     // @formatter:off
     @Override
     public Collection<String> devicesForAlerts(int alertId) {
+
         HashSet<String> deviceIds = new HashSet<>();
         List<CompletableFuture<Set<String>>> devicesForUids = setOps.members(notificationsForAlertKey(alertId))
                                                                     .stream()
-                                                                    .map(uid -> CompletableFuture.supplyAsync(() -> setOps.members(uid)))
+                                                                    .map(uid -> CompletableFuture.supplyAsync(() -> setOps.members(devicesForUidKey(uid))))
                                                                     .collect(Collectors.toList());
 
         devicesForUids.stream().map(CompletableFuture::join).forEach(set -> deviceIds.addAll(set));
         return deviceIds;
 
-
 //        HashSet<String> deviceIds = new HashSet<>();
+//        setOps.members(notificationsForAlertKey(alertId))
+//                .forEach(uid -> deviceIds.addAll(setOps.members(devicesForUidKey(uid))));
+//        for (String uid : setOps.members(notificationsForAlertKey(alertId))) {
+//            deviceIds.addAll(setOps.members(devicesForUidKey(uid)));
+//        }
+        
 //        try (Jedis jedis = jedisPool.getResource()) {
 //            for (String uid : jedis.smembers(notificationsForAlertKey(alertId))) {
 //                deviceIds.addAll(jedis.smembers(devicesForUidKey(uid)));
