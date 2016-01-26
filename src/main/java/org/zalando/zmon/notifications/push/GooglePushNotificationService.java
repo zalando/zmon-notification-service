@@ -9,6 +9,7 @@ import org.apache.http.client.fluent.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.util.Assert;
 import org.zalando.zmon.notifications.data.PublishRequestBody;
 
 import com.google.common.base.MoreObjects;
@@ -21,6 +22,8 @@ public class GooglePushNotificationService implements PushNotificationService {
     private final String googleApiKey;
 
     public GooglePushNotificationService(String serviceUrl, String googleApiKey) {
+        Assert.hasText(serviceUrl, "'serviceUrl' should never be null or empty");
+        Assert.hasText(googleApiKey, "'googleApiKey' should never be null or empty");
         LOG.info("Setting Google Service Url to {}", serviceUrl);
         LOG.info("Setting Google API Key to ...{}", googleApiKey.substring(Math.max(0, googleApiKey.length() - 4)));
 

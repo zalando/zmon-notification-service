@@ -2,6 +2,8 @@ package org.zalando.zmon.notifications.config;
 
 import java.net.URISyntaxException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,8 @@ import org.zalando.zmon.notifications.store.RedisNotificationStore;
 @Configuration
 public class ApplicationConfig {
 
+    private final Logger log = LoggerFactory.getLogger(ApplicationConfig.class);
+
     @Autowired
     NotificationServiceConfig config;
 
@@ -32,6 +36,7 @@ public class ApplicationConfig {
 
     @Bean
     TokenInfoService getTokenInfoService() {
+        log.info("Configure OAuthTokenService with url : " + config.getOauthInfoServiceUrl());
         return new OAuthTokenInfoService(config.getOauthInfoServiceUrl());
     }
 
