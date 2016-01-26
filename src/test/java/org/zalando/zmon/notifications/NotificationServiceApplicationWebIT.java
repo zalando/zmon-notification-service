@@ -112,7 +112,7 @@ public class NotificationServiceApplicationWebIT implements Resources {
         ResponseEntity<String> response3 = rest.exchange(request3, String.class);
         Assertions.assertThat(response3.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(10);
     }
 
     @Configuration
