@@ -6,7 +6,7 @@ public class DummyTokenInfoService implements TokenInfoService {
 
     @Override
     public Optional<String> lookupUid(String authorizationHeaderValue) {
-        if (authorizationHeaderValue.equals("Bearer 6334ff68-ba2e-4b07-8e67-9304c55f8308")) {
+        if ("Bearer 6334ff68-ba2e-4b07-8e67-9304c55f8308".equals(authorizationHeaderValue)) {
             return Optional.of("a-uid");
         } else {
             return Optional.empty();

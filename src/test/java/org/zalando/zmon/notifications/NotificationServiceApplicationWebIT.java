@@ -1,129 +1,64 @@
 package org.zalando.zmon.notifications;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.net.URISyntaxException;
+import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.zalando.zmon.notifications.oauth.DummyTokenInfoService;
-import org.zalando.zmon.notifications.oauth.TokenInfoService;
+import org.springframework.web.client.RestTemplate;
 import org.zalando.zmon.notifications.push.PushNotificationService;
 import org.zalando.zmon.notifications.push.StubPushNotificationService;
-import org.zalando.zmon.notifications.store.InMemoryNotificationStore;
-import org.zalando.zmon.notifications.store.NotificationStore;
+
+import com.google.common.collect.Maps;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { NotificationServiceApplication.class,
-        NotificationServiceApplicationWebIT.class })
-@WebIntegrationTest({ "server.port=0", "management.port=0" })
+        NotificationServiceApplicationWebIT.TestConfiguration.class })
+@WebIntegrationTest(randomPort = true)
 public class NotificationServiceApplicationWebIT {
 
-    @Autowired
-    NotificationServiceApplication application;
-
-    @Autowired
-    private WebApplicationContext wac;
+    @Value("${local.server.port}")
+    private int port;
 
     private final String DEVICE = UUID.fromString("6f18fb92-dbe3-41ac-ab8e-82be7f30e246").toString();
 
-    @Bean
-    TokenInfoService getTokenInfoService() {
-        return new DummyTokenInfoService();
-    }
-
-    @Bean
-    PushNotificationService getPushNotificationService() {
-        return new StubPushNotificationService();
-    }
-
-    @Bean
-    NotificationStore getNotificationStore() throws URISyntaxException {
-        return new InMemoryNotificationStore();
-    }
-
     @Test
     public void unauthorized() throws Exception {
-        MockMvc mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-
-        mvc.perform(post("/api/v1/device").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content("{\"registration_token\" : \"" + DEVICE + "\" }")
-                .header("Authorization", "Bearer 1334ff68-ba2e-4b07-8e67-9304c55f8308") // wrong
-                                                                                        // token;
-                                                                                        // see:
-                                                                                        // DummyTokenInfoService
-        ).andExpect(status().isUnauthorized());
+        TimeUnit.SECONDS.sleep(3);
+        RestTemplate rest = new RestTemplate();
+        rest.setErrorHandler(new PassThrough());
+        Map<String, String> body = Maps.newHashMap();
+        body.put("registration_token", DEVICE);
+        RequestEntity request = RequestEntity.post(URI.create("http://localhost:" + port + "/api/v1/device"))
+                .contentType(MediaType.APPLICATION_JSON).body(body);
+        ResponseEntity<String> response = rest.exchange(request, String.class);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
-    // @Test
-    // public void happyPath() throws Exception {
-    // MockMvc mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-    //
-    // // insert device
-    // mvc.perform(
-    // post("/api/v1/device").
-    // contentType(MediaType.APPLICATION_JSON_UTF8).
-    // content("{\"registration_token\" : \""+ DEVICE +"\" }").
-    // header("Authorization", "Bearer 6334ff68-ba2e-4b07-8e67-9304c55f8308")
-    // ).andExpect(
-    // status().isOk()
-    // );
-    //
-    // assertEquals(
-    // "in-mem-store: devices={a-uid=[6f18fb92-dbe3-41ac-ab8e-82be7f30e246]}
-    // alerts={}",
-    // application.notificationStore.toString()
-    // );
-    //
-    // // insert alert
-    // mvc.perform(
-    // post("/api/v1/subscription").
-    // contentType(MediaType.APPLICATION_JSON_UTF8).
-    // content("{\"alert_id\" : "+ ALERT +" }").
-    // header("Authorization", "Bearer 6334ff68-ba2e-4b07-8e67-9304c55f8308")
-    // ).andExpect(
-    // status().isOk()
-    // );
-    //
-    // assertEquals(
-    // "in-mem-store: devices={a-uid=[6f18fb92-dbe3-41ac-ab8e-82be7f30e246]}
-    // alerts={142=[a-uid]}",
-    // application.notificationStore.toString()
-    // );
-    //
-    // // publish
-    // mvc.perform(
-    // post("/api/v1/publish").
-    // header("Authorization", "Bearer 6334ff68-ba2e-4b07-8e67-9304c55f8308").
-    // contentType(MediaType.APPLICATION_JSON_UTF8).
-    // content("{" +
-    // "\"alert_id\" : "+ ALERT + "," +
-    // "\"entity_id\":\"customer5.db.zalando\"," +
-    // "\"notification\": {\"title\":\"No database connection to
-    // master\",\"body\":\"\",\"icon\":\"\"}" +
-    // "}"
-    // )
-    // ).andExpect(
-    // status().isOk()
-    // );
-    //
-    // assertEquals(
-    // "stub-pushed-notifications:
-    // {6f18fb92-dbe3-41ac-ab8e-82be7f30e246=[PublishRequestBody{alert_id="+ALERT+",
-    // notification=PublishNotificationPart{title=No database connection to
-    // master, body=, icon=}, entity_id=customer5.db.zalando}]}",
-    // application.pushNotificationService.toString()
-    // );
-    // }
+    @Configuration
+    static class TestConfiguration {
+
+        // @Bean
+        // TokenInfoService getTokenInfoService() {
+        // return new DummyTokenInfoService();
+        // }
+
+        @Bean
+        PushNotificationService getPushNotificationService() {
+            return new StubPushNotificationService();
+        }
+    }
 }

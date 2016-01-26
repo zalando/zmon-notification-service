@@ -14,12 +14,12 @@ import redis.clients.jedis.JedisPool;
 
 public class RedisNotificationStore implements NotificationStore {
 
-    private final JedisPool jedisPool;
+    // private final JedisPool jedisPool;
     // private final StringRedisTemplate redisTemplate;
     private final SetOperations<String, String> setOps;
 
     public RedisNotificationStore(JedisPool jedisPool, StringRedisTemplate redisTemplate) {
-        this.jedisPool = jedisPool;
+        // this.jedisPool = jedisPool;
         // this.redisTemplate = redisTemplate;
         this.setOps = redisTemplate.opsForSet();
     }

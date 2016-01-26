@@ -1,6 +1,5 @@
 package org.zalando.zmon.notifications.config;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,6 @@ import org.zalando.zmon.notifications.push.PushNotificationService;
 import org.zalando.zmon.notifications.store.NotificationStore;
 import org.zalando.zmon.notifications.store.PreSharedKeyStore;
 import org.zalando.zmon.notifications.store.RedisNotificationStore;
-
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Beans needed in this application.
@@ -46,9 +42,10 @@ public class ApplicationConfig {
 
     @Bean
     NotificationStore getNotificationStore() throws URISyntaxException {
-        JedisPoolConfig poolConfig = new JedisPoolConfig();
-        JedisPool jedisPool = new JedisPool(poolConfig, new URI(config.getRedisUri()));
-        return new RedisNotificationStore(jedisPool, stringRedisTemplate);
+        // JedisPoolConfig poolConfig = new JedisPoolConfig();
+        // JedisPool jedisPool = new JedisPool(poolConfig, new
+        // URI(config.getRedisUri()));
+        return new RedisNotificationStore(null, stringRedisTemplate);
     }
 
     @Bean
