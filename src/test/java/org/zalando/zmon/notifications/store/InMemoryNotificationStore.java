@@ -1,11 +1,10 @@
 package org.zalando.zmon.notifications.store;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.ArrayList;
 import java.util.Collection;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 public class InMemoryNotificationStore implements NotificationStore {
     private final Multimap<String, String> devices = ArrayListMultimap.create();
@@ -24,12 +23,12 @@ public class InMemoryNotificationStore implements NotificationStore {
 
     @Override
     public void removeDeviceForUid(String deviceId, String uid) {
-        throw new NotImplementedException();
+        throw new RuntimeException("Not implemented yet");
     }
 
     @Override
     public void removeAlertForUid(int alertId, String uid) {
-        throw new NotImplementedException();
+        throw new RuntimeException("Not implemented yet");
     }
 
     @Override

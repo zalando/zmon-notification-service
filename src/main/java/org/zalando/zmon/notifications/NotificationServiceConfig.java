@@ -1,9 +1,9 @@
 package org.zalando.zmon.notifications;
 
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Map;
 
 /**
  * Created by jmussler on 12/15/15.
@@ -11,9 +11,11 @@ import java.util.Map;
 @Configuration
 @ConfigurationProperties(prefix = "notifications")
 public class NotificationServiceConfig {
+
     private String oauthInfoServiceUrl;
 
     private String googleUrl;
+
     private String googleApiKey;
 
     private String redisUri;
@@ -36,7 +38,6 @@ public class NotificationServiceConfig {
         this.oauthInfoServiceUrl = teamServiceUrl;
     }
 
-
     public String getGooglePushServiceUrl() {
         return googleUrl;
     }
@@ -45,7 +46,6 @@ public class NotificationServiceConfig {
         this.googleUrl = googleUrl;
     }
 
-
     public String getGooglePushServiceApiKey() {
         return googleApiKey;
     }
@@ -53,7 +53,6 @@ public class NotificationServiceConfig {
     public void setGooglePushServiceApiKey(String googleApiKey) {
         this.googleApiKey = googleApiKey;
     }
-
 
     public String getRedisUri() {
         return redisUri;

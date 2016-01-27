@@ -1,0 +1,21 @@
+#
+#
+#
+#
+
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+
+notifications:
+#  redis-uri: redis://localhost:6379/0
+
+  oauth-info-service-url: http://localhost:10080/oauth2/tokeninfo?
+
+  google-push-service-url: http://localhost:10080/gcm/send
+  google-push-service-api-key: INVALID
+
+mobile:
+  data-service-url: 

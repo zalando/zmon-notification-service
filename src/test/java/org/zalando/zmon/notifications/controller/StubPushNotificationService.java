@@ -1,17 +1,19 @@
-package org.zalando.zmon.notifications.push;
+package org.zalando.zmon.notifications.controller;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import org.zalando.zmon.notifications.NotificationServiceApplication;
 
 import java.io.IOException;
 
+import org.zalando.zmon.notifications.data.PublishRequestBody;
+import org.zalando.zmon.notifications.push.PushNotificationService;
+
 public class StubPushNotificationService implements PushNotificationService {
 
-    private final Multimap<String, NotificationServiceApplication.PublishRequestBody> sent = ArrayListMultimap.create();
+    private final Multimap<String, PublishRequestBody> sent = ArrayListMultimap.create();
 
     @Override
-    public void push(NotificationServiceApplication.PublishRequestBody notification, String deviceToken) throws IOException {
+    public void push(PublishRequestBody notification, String deviceToken) throws IOException {
         sent.put(deviceToken, notification);
     }
 

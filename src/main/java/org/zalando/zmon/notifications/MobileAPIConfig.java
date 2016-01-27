@@ -9,8 +9,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "mobile")
 public class MobileAPIConfig {
-    public String dataServiceUrl;
-    public String readScope;
+
+    /**
+     * The url to the 'zmon-data-service'.
+     * 
+     */
+    private String dataServiceUrl;
+
+    private String readScope;
 
     public String getDataServiceUrl() {
         return dataServiceUrl;
@@ -19,4 +25,13 @@ public class MobileAPIConfig {
     public void setDataServiceUrl(String dataServiceUrl) {
         this.dataServiceUrl = dataServiceUrl;
     }
+
+    public String getReadScope() {
+        return readScope;
+    }
+
+    public void setReadScope(String readScope) {
+        this.readScope = readScope;
+    }
+
 }
