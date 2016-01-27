@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zalando.zmon.notifications.MobileAPIConfig;
@@ -42,7 +41,7 @@ public class MobileController {
         this.mapper = mapper;
     }
 
-    @RequestMapping(path = "alert", method = RequestMethod.GET)
+    @RequestMapping(path = "alert")
     public ResponseEntity<JsonNode> getAllAlerts(
             @RequestParam(value = "team", required = false, defaultValue = "*") String team,
             @RequestHeader(value = "Authorization", required = false) String oauthHeader)
@@ -52,8 +51,8 @@ public class MobileController {
             return new ResponseEntity<>((JsonNode) null, HttpStatus.UNAUTHORIZED);
         }
 
-        URI uri = new URIBuilder().setPath(config.dataServiceUrl + "/api/v1/mobile/alert").addParameter("team", team)
-                .build();
+        URI uri = new URIBuilder().setPath(config.getDataServiceUrl() + "/api/v1/mobile/alert")
+                .addParameter("team", team).build();
         final String r = Request.Get(uri).addHeader("Authorization", oauthHeader).useExpectContinue().execute()
                 .returnContent().asString();
 
@@ -61,7 +60,7 @@ public class MobileController {
         return new ResponseEntity<>(node, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "alert/{alert_id}", method = RequestMethod.GET)
+    @RequestMapping(path = "alert/{alert_id}")
     public ResponseEntity<JsonNode> getAlertDetails(@PathVariable(value = "alert_id") int alertId,
             @RequestHeader(value = "Authorization", required = false) String oauthHeader)
                     throws URISyntaxException, IOException {
@@ -70,7 +69,7 @@ public class MobileController {
             return new ResponseEntity<>((JsonNode) null, HttpStatus.UNAUTHORIZED);
         }
 
-        URI uri = new URIBuilder().setPath(config.dataServiceUrl + "/api/v1/mobile/alert/" + alertId).build();
+        URI uri = new URIBuilder().setPath(config.getDataServiceUrl() + "/api/v1/mobile/alert/" + alertId).build();
         final String r = Request.Get(uri).addHeader("Authorization", oauthHeader).useExpectContinue().execute()
                 .returnContent().asString();
 
@@ -79,7 +78,7 @@ public class MobileController {
         return new ResponseEntity<>(node, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "active-alerts", method = RequestMethod.GET)
+    @RequestMapping(path = "active-alerts")
     public ResponseEntity<JsonNode> getActiveAlerts(
             @RequestParam(value = "team", required = false, defaultValue = "*") String team,
             @RequestHeader(value = "Authorization", required = false) String oauthHeader)
@@ -89,7 +88,7 @@ public class MobileController {
             return new ResponseEntity<>((JsonNode) null, HttpStatus.UNAUTHORIZED);
         }
 
-        URI uri = new URIBuilder().setPath(config.dataServiceUrl + "/api/v1/mobile/active-alerts")
+        URI uri = new URIBuilder().setPath(config.getDataServiceUrl() + "/api/v1/mobile/active-alerts")
                 .addParameter("team", team).build();
         final String r = Request.Get(uri).addHeader("Authorization", oauthHeader).useExpectContinue().execute()
                 .returnContent().asString();
@@ -98,7 +97,7 @@ public class MobileController {
         return new ResponseEntity<>(node, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "all-teams", method = RequestMethod.GET)
+    @RequestMapping(path = "all-teams")
     public ResponseEntity<JsonNode> getAllTeams(
             @RequestHeader(value = "Authorization", required = false) String oauthHeader)
                     throws URISyntaxException, IOException {
@@ -107,7 +106,7 @@ public class MobileController {
             return new ResponseEntity<>((JsonNode) null, HttpStatus.UNAUTHORIZED);
         }
 
-        URI uri = new URIBuilder().setPath(config.dataServiceUrl + "/api/v1/mobile/all-teams").build();
+        URI uri = new URIBuilder().setPath(config.getDataServiceUrl() + "/api/v1/mobile/all-teams").build();
         final String r = Request.Get(uri).addHeader("Authorization", oauthHeader).useExpectContinue().execute()
                 .returnContent().asString();
 
@@ -116,7 +115,7 @@ public class MobileController {
         return new ResponseEntity<>(node, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "status", method = RequestMethod.GET)
+    @RequestMapping(path = "status")
     public ResponseEntity<JsonNode> getStatus(
             @RequestHeader(value = "Authorization", required = false) String oauthHeader)
                     throws URISyntaxException, IOException {
@@ -125,7 +124,7 @@ public class MobileController {
             return new ResponseEntity<>((JsonNode) null, HttpStatus.UNAUTHORIZED);
         }
 
-        URI uri = new URIBuilder().setPath(config.dataServiceUrl + "/api/v1/mobile/status").build();
+        URI uri = new URIBuilder().setPath(config.getDataServiceUrl() + "/api/v1/mobile/status").build();
         final String r = Request.Get(uri).addHeader("Authorization", oauthHeader).useExpectContinue().execute()
                 .returnContent().asString();
 

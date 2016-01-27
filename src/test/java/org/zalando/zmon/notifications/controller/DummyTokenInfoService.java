@@ -1,6 +1,8 @@
-package org.zalando.zmon.notifications.oauth;
+package org.zalando.zmon.notifications.controller;
 
 import java.util.Optional;
+
+import org.zalando.zmon.notifications.oauth.TokenInfoService;
 
 public class DummyTokenInfoService implements TokenInfoService {
 

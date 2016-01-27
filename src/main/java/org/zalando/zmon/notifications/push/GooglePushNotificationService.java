@@ -1,6 +1,6 @@
 package org.zalando.zmon.notifications.push;
 
-import static org.zalando.zmon.notifications.json.JsonHelper.jsonEntityFor;
+import static org.zalando.zmon.notifications.push.JsonHelper.jsonEntityFor;
 
 import java.io.IOException;
 

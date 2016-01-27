@@ -47,10 +47,7 @@ public class ApplicationConfig {
 
     @Bean
     NotificationStore getNotificationStore() throws URISyntaxException {
-        // JedisPoolConfig poolConfig = new JedisPoolConfig();
-        // JedisPool jedisPool = new JedisPool(poolConfig, new
-        // URI(config.getRedisUri()));
-        return new RedisNotificationStore(null, stringRedisTemplate);
+        return new RedisNotificationStore(stringRedisTemplate);
     }
 
     @Bean

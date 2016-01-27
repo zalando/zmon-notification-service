@@ -67,6 +67,7 @@ public class PublishController {
         }
 
         Collection<String> deviceIds = notificationStore.devicesForAlerts(body.alert_id);
+
         for (String deviceId : deviceIds) {
             pushNotificationService.push(body, deviceId);
         }

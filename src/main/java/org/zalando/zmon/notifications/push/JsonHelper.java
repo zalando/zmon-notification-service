@@ -1,20 +1,23 @@
-package org.zalando.zmon.notifications.json;
+package org.zalando.zmon.notifications.push;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import static com.google.common.base.Charsets.UTF_8;
+
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.zalando.zmon.notifications.data.PublishRequestBody;
 
-import static com.google.common.base.Charsets.UTF_8;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class JsonHelper {
+class JsonHelper {
 
-    private static final ObjectMapper mapper = new ObjectMapper(); // Setup Jackson
+    private static final ObjectMapper mapper = new ObjectMapper(); // Setup
+                                                                   // Jackson
 
-    public static StringEntity jsonEntityFor(String deviceToken, PublishRequestBody notification) throws JsonProcessingException {
+    static StringEntity jsonEntityFor(String deviceToken, PublishRequestBody notification)
+            throws JsonProcessingException {
         ObjectNode request = mapper.createObjectNode();
 
         request.put("to", deviceToken);

@@ -1,4 +1,4 @@
-package org.zalando.zmon.notifications.push;
+package org.zalando.zmon.notifications.controller;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import java.io.IOException;
 
 import org.zalando.zmon.notifications.data.PublishRequestBody;
+import org.zalando.zmon.notifications.push.PushNotificationService;
 
 public class StubPushNotificationService implements PushNotificationService {
 

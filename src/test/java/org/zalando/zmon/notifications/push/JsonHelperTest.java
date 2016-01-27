@@ -1,10 +1,11 @@
-package org.zalando.zmon.notifications.json;
+package org.zalando.zmon.notifications.push;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.StringEntity;
 import org.junit.Test;
 import org.zalando.zmon.notifications.data.PublishNotificationPart;
 import org.zalando.zmon.notifications.data.PublishRequestBody;
+import org.zalando.zmon.notifications.push.JsonHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

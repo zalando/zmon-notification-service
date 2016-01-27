@@ -10,17 +10,11 @@ import java.util.stream.Collectors;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import redis.clients.jedis.JedisPool;
-
 public class RedisNotificationStore implements NotificationStore {
 
-    // private final JedisPool jedisPool;
-    // private final StringRedisTemplate redisTemplate;
     private final SetOperations<String, String> setOps;
 
-    public RedisNotificationStore(JedisPool jedisPool, StringRedisTemplate redisTemplate) {
-        // this.jedisPool = jedisPool;
-        // this.redisTemplate = redisTemplate;
+    public RedisNotificationStore(StringRedisTemplate redisTemplate) {
         this.setOps = redisTemplate.opsForSet();
     }
 
@@ -30,13 +24,6 @@ public class RedisNotificationStore implements NotificationStore {
     @Override
     public void addDeviceForUid(String deviceId, String uid) {
         setOps.add(devicesForUidKey(uid), deviceId);
-        // try (Jedis jedis = jedisPool.getResource()) {
-        // jedis.sadd(devicesForUidKey(uid), deviceId); // this redis set
-        // // contains all the
-        // // devices registered
-        // // for a specific oauth
-        // // uid
-        // }
     }
 
     /**
@@ -46,16 +33,6 @@ public class RedisNotificationStore implements NotificationStore {
     public void addAlertForUid(int alertId, String uid) {
         setOps.add(alertsForUidKey(uid), "" + alertId);
         setOps.add(notificationsForAlertKey(alertId), uid);
-        // try (Jedis jedis = jedisPool.getResource()) {
-        // jedis.sadd(alertsForUidKey(uid), "" + alertId);
-        // jedis.sadd(notificationsForAlertKey(alertId), uid); // this redis
-        // // set contains
-        // // all the users
-        // // registered
-        // // for a
-        // // specific
-        // // alert id
-        // }
     }
 
     /**
@@ -64,33 +41,17 @@ public class RedisNotificationStore implements NotificationStore {
     @Override
     public void removeDeviceForUid(String deviceId, String uid) {
         setOps.remove(devicesForUidKey(uid), deviceId);
-        // try (Jedis jedis = jedisPool.getResource()) {
-        // jedis.srem(devicesForUidKey(uid), deviceId); // remove device from
-        // // user
-        // }
     }
 
     @Override
     public void removeAlertForUid(int alertId, String uid) {
         setOps.remove(alertsForUidKey(uid), "" + alertId);
         setOps.remove(notificationsForAlertKey(alertId), uid);
-        // try (Jedis jedis = jedisPool.getResource()) {
-        // jedis.srem(alertsForUidKey(uid), "" + alertId);
-        // jedis.srem(notificationsForAlertKey(alertId), uid);
-        // }
     }
 
     @Override
     public Collection<Integer> alertsForUid(String uid) {
         return setOps.members(alertsForUidKey(uid)).stream().map(Integer::parseInt).collect(Collectors.toList());
-        // try (Jedis jedis = jedisPool.getResource()) {
-        // List<Integer> alertIds = new ArrayList();
-        // Collection<String> ids = jedis.smembers(alertsForUidKey(uid));
-        // for (String id : ids) {
-        // alertIds.add(Integer.parseInt(id));
-        // }
-        // return alertIds;
-        // }
     }
 
     // @formatter:off
@@ -105,20 +66,6 @@ public class RedisNotificationStore implements NotificationStore {
 
         devicesForUids.stream().map(CompletableFuture::join).forEach(set -> deviceIds.addAll(set));
         return deviceIds;
-
-//        HashSet<String> deviceIds = new HashSet<>();
-//        setOps.members(notificationsForAlertKey(alertId))
-//                .forEach(uid -> deviceIds.addAll(setOps.members(devicesForUidKey(uid))));
-//        for (String uid : setOps.members(notificationsForAlertKey(alertId))) {
-//            deviceIds.addAll(setOps.members(devicesForUidKey(uid)));
-//        }
-        
-//        try (Jedis jedis = jedisPool.getResource()) {
-//            for (String uid : jedis.smembers(notificationsForAlertKey(alertId))) {
-//                deviceIds.addAll(jedis.smembers(devicesForUidKey(uid)));
-//            }
-//        }
-//        return deviceIds;
     }
     // @formatter:on
 
