@@ -11,7 +11,7 @@ pipeline:
           git
           curl -fLOsS https://delivery.cloud.zalando.com/utils/ensure-docker && sh ensure-docker && rm ensure-docker
 
-      - desc: "Build package"
+      - desc: "Build maven package"
         cmd: |
           ./mvnw clean package
 
