@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.2.RELEASE</version>
+		<version>1.4.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -97,6 +97,12 @@
 			<artifactId>failsafe</artifactId>
 			<version>1.0.4</version>
 		</dependency>
+		<!--Does automatic configuration of OpenTracing tracer. NoopTracer is by default-->
+		<dependency>
+			<groupId>io.opentracing.contrib</groupId>
+			<artifactId>opentracing-spring-cloud-starter</artifactId>
+			<version>0.0.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -106,6 +112,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<mainClass>org.zalando.zmon.notifications.NotificationServiceApplication</mainClass>
+					<layout>ZIP</layout>
 				</configuration>
 			</plugin>
 		</plugins>
